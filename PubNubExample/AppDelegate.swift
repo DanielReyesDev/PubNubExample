@@ -11,11 +11,15 @@ import PubNub
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
+    var window: UIWindow?
     var client: PubNub!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         connectToPubNub()
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = UINavigationController(rootViewController: ChannelViewController(channelName: "general") )
+        window?.makeKeyAndVisible()
         return true
     }
 
@@ -27,12 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
     }
     
-        
-    
     func connectToPubNub(){
         let configuration = PNConfiguration(publishKey: "pub-c-955af0d5-f7cd-4e4c-83df-03081bee0778",
                                             subscribeKey: "sub-c-f0ed332a-04b0-11ea-a577-b207d7d0b791")
-//        configuration.stripMobilePayload = false
         configuration.uuid = UUID().uuidString
         UserDefaults.standard.set(configuration.uuid, forKey: "uuid")
         self.client = PubNub.clientWithConfiguration(configuration)
